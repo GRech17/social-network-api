@@ -64,7 +64,7 @@ const userController = {
         User.findOneAndDelete({_id:params.id})
         .then(dbUserData => {
             if(!dbUserData) {
-                res.status(404).json({ message: 'no pizza found with this id'});
+                res.status(404).json({ message: 'no user found with this id'});
                 return;
             }
             res.json(dbUserData);
@@ -73,10 +73,11 @@ const userController = {
     },
 
     //add friend
-    addFriend({params}, res) {
+    addFriend(req, res) {
+        console.log(req.params, "hello")
         User.findOneAndUpdate(
-            {_id:params.id},
-            {$addToSet: {friends: params.friendsId}},
+            {_id:req.params.UserId},
+            {$addToSet: {friends: req.params.friendsId}},
             {new: true}
         )
         .then(dbUserData => res.json(dbUserData))
@@ -86,7 +87,7 @@ const userController = {
     //delete friend
     deleteFriend({params}, res) {
         User.findOneAndUpdate(
-            {_id: params.id},
+            {_id: params.UserId},
             {$pull: {friends: params.friendsId}},
             {new:true}
         )
